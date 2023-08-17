@@ -21,7 +21,8 @@ public class UserService {
 	public Optional<User> loginUser(String username){
 		return userrepo.findByUsername(username);
 	}
-	public Optional<User> fetchUser(long a){
-		return userrepo.findByAnumber(a);
+	public User fetchUser(long a){
+		Optional<User> u = userrepo.findByAnumber(a);
+		return u.get();
 	}
 }
