@@ -71,37 +71,37 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/account")
-	public ResponseEntity<String> Account( @RequestBody JsonNode jsonNode)throws JsonMappingException, JsonProcessingException{
-		
-		
-		try {
-			User u= uservice.fetchUser(jsonNode.get("anumber").asLong());
-			UserLogin ul = objectMapper.treeToValue(jsonNode, UserLogin.class);
-			ul.setUs(u);
-			ulservice.registerUser(ul);
-		}
-		catch (Exception e) {
-			return new ResponseEntity<>("Error Message "+e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
-			return new ResponseEntity<>("User Created Succesfully \nUser Id is", HttpStatus.CREATED);
-	}
+//	@PostMapping("/account")
+//	public ResponseEntity<String> Account( @RequestBody JsonNode jsonNode)throws JsonMappingException, JsonProcessingException{
+//		
+//		
+//		try {
+//			User u= uservice.fetchUser(jsonNode.get("anumber").asLong());
+//			UserLogin ul = objectMapper.treeToValue(jsonNode, UserLogin.class);
+//			ul.setUs(u);
+//			ulservice.registerUser(ul);
+//		}
+//		catch (Exception e) {
+//			return new ResponseEntity<>("Error Message "+e.getMessage(),HttpStatus.BAD_REQUEST);
+//		}
+//			return new ResponseEntity<>("User Created Succesfully \nUser Id is", HttpStatus.CREATED);
+//	}
 	
-	@PostMapping("/login")
-	public Boolean Login(@Validated @RequestBody User user) throws ResourceNotFoundException 
-	{
-		Boolean a = false;
-		String UserName = user.getUserlogin().getUsername();
-		System.out.print(UserName);
-		String Password = user.getUserlogin().getPassword();
-		
-		User u = uservice.loginUser(UserName).orElseThrow(()->
-		new ResourceNotFoundException("User not found for this id :: "));
-		
-		if(UserName.equals(u.getUserlogin().getUsername()) && Password.equals(u.getUserlogin().getPassword())) {
-			a = true;
-		}
-		return a;
-	}
+//	@PostMapping("/login")
+//	public Boolean Login(@Validated @RequestBody User user) throws ResourceNotFoundException 
+//	{
+//		Boolean a = false;
+//		String UserName = user.getUserlogin().getUsername();
+//		System.out.print(UserName);
+//		String Password = user.getUserlogin().getPassword();
+//		
+//		User u = uservice.loginUser(UserName).orElseThrow(()->
+//		new ResourceNotFoundException("User not found for this id :: "));
+//		
+//		if(UserName.equals(u.getUserlogin().getUsername()) && Password.equals(u.getUserlogin().getPassword())) {
+//			a = true;
+//		}
+//		return a;
+//	}
 	
 }

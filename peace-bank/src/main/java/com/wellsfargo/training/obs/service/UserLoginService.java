@@ -1,5 +1,7 @@
 package com.wellsfargo.training.obs.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +18,8 @@ public class UserLoginService {
 	
 	public UserLogin registerUser(UserLogin u) {
 		return userloginrepo.save(u);
+	}
+	public Optional<UserLogin> loginUser(String username){
+		return userloginrepo.findByUsername(username);
 	}
 }
