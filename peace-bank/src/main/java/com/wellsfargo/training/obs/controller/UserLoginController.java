@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wellsfargo.training.obs.dto.LoginResult;
 import com.wellsfargo.training.obs.exception.ResourceNotFoundException;
 import com.wellsfargo.training.obs.model.User;
 import com.wellsfargo.training.obs.model.UserLogin;
@@ -55,7 +56,7 @@ public class UserLoginController {
 	}
 	
 	@PostMapping("/login")
-	public Boolean Login(@Validated @RequestBody UserLogin u) throws ResourceNotFoundException 
+	public LoginResult Login(@Validated @RequestBody UserLogin u) throws ResourceNotFoundException 
 	{
 		Boolean a = false;
 		String UserName = u.getUsername();
@@ -65,9 +66,14 @@ public class UserLoginController {
 		UserLogin ul = ulservice.loginUser(UserName).orElseThrow(()->
 		new ResourceNotFoundException("User not found for this id :: "));
 		
+		long accountnumber = ul.getUs().getAnumber();
+		
 		if(UserName.equals(ul.getUsername()) && Password.equals(ul.getPassword())) {
 			a = true;
 		}
-		return a;
+		LoginResult lr = new LoginResult();
+		lr.setSuccess(a);
+		lr.setAccountNumber(accountnumber);
+		return lr;
 }
 }
