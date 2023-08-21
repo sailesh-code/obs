@@ -1,5 +1,6 @@
 package com.wellsfargo.training.obs.controller;
 
+import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,7 @@ public class UserLoginController {
 		new ResourceNotFoundException("User not found for this id :: "));
 		
 		long accountnumber = ul.getUs().getAnumber();
+		long id = ul.getUs().getId();
 		
 		if(UserName.equals(ul.getUsername()) && Password.equals(ul.getPassword())) {
 			a = true;
@@ -74,6 +76,9 @@ public class UserLoginController {
 		LoginResult lr = new LoginResult();
 		lr.setSuccess(a);
 		lr.setAccountNumber(accountnumber);
+		lr.setId(id);
 		return lr;
 }
+//	@GetMapping("/login/{id}")
+//	public 
 }

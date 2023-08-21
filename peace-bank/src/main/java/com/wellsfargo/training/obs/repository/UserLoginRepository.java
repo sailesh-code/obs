@@ -8,4 +8,5 @@ import com.wellsfargo.training.obs.model.UserLogin;
 
 public interface UserLoginRepository extends JpaRepository<UserLogin, Long>{
 	public Optional<UserLogin> findByUsername(String username);
+	public Optional<UserLogin> findById(long id);
 }

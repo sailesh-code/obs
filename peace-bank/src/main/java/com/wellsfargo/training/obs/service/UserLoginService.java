@@ -22,4 +22,8 @@ public class UserLoginService {
 	public Optional<UserLogin> loginUser(String username){
 		return userloginrepo.findByUsername(username);
 	}
+	public UserLogin findUser(long id){
+		Optional<UserLogin> u = userloginrepo.findById(id);
+		return u.get();
+	}
 }
