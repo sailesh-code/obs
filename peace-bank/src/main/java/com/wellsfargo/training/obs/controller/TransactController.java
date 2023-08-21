@@ -1,8 +1,11 @@
 package com.wellsfargo.training.obs.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +21,7 @@ import com.wellsfargo.training.obs.service.UserLoginService;
 import com.wellsfargo.training.obs.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/transaction")
 public class TransactController {
 
 	@Autowired
@@ -32,19 +35,18 @@ public class TransactController {
 		this.uservice = uservice;
 	}
 	
-	@PutMapping("/transaction/{id}")
-	public ResponseEntity <?> createTransact(@PathVariable(value="id") long aNumber,@Validated @RequestBody Transact transact){
+	@PutMapping()
+	public ResponseEntity <?> createTransact(@Validated @RequestBody Transact transact){
 		
 		long amount = transact.getAmount();
 		long toaccount = transact.getToAcc();
-		UserLogin u = ulservice.findUser(aNumber);
-		long fromaccount = u.getUs().getAnumber();
-		
+		User u = uservice.fetchUser(transact.getFromAcc());
+		long fromaccount = transact.getFromAcc();
 		User fromUser = uservice.fetchUser(fromaccount);
 		User toUser = uservice.fetchUser(toaccount);
-		
-		if(fromUser == null || toUser == null) {
-			return ResponseEntity.notFound().build();
+		long pin = fromUser.getUserlogin().getTpin();
+		if(fromUser == null || toUser == null || pin != transact.getPin()) {
+			return ResponseEntity.badRequest().body("Invalid Action Please check from and to user");
 		}
 		if(fromUser.getAbalance() < amount) {
 			return ResponseEntity.badRequest().body("Insufficient Balance");
@@ -91,9 +93,12 @@ public class TransactController {
 		}
 		
 		uservice.registerUser(u);
-		return ResponseEntity.ok("Balance updated successfully");
-		
-		
-		
+		return ResponseEntity.ok("Balance updated successfully");		
+	}
+	@GetMapping("/{id}")
+	public List<Transact> getTransactions(@PathVariable(value = "id") long id){
+		UserLogin ul = ulservice.findUser(id);
+		long account = ul.getUs().getAnumber();
+		return tservice.showTransact(account);
 	}
 }

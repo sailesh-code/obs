@@ -41,4 +41,6 @@ public class Transact {
 	private String nickName;
 	
 	private String remarks;
+	
+	private long pin;
 }

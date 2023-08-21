@@ -23,6 +23,9 @@ public class UserService {
 	}
 	public User fetchUser(long a){
 		Optional<User> u = userrepo.findByAnumber(a);
+		if(u == null) {
+			return null;
+		}
 		return u.get();
 	}
 }
