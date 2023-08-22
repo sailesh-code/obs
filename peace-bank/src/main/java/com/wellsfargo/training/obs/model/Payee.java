@@ -18,5 +18,5 @@ public class Payee {
 	private long fromAccount;
 	private long benAccount;
 	private String benName;
-	private long nickName;
+	private String nickName;
 }

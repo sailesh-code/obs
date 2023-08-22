@@ -18,14 +18,15 @@ public class UserService {
 	public User registerUser(User u) {
 		return userrepo.save(u);
 	}
-	public Optional<User> loginUser(String username){
-		return userrepo.findByUsername(username);
-	}
+//	public Optional<User> loginUser(String username){
+//		return userrepo.findByUsername(username);
+//	}
 	public User fetchUser(long a){
 		Optional<User> u = userrepo.findByAnumber(a);
-		if(u == null) {
-			return null;
-		}
+		return u.get();
+	}
+	public User fetchUserByEmail(String email) {
+		Optional<User> u = userrepo.findByEmail(email);
 		return u.get();
 	}
 }
