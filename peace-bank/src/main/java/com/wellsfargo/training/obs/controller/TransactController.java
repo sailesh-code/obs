@@ -96,7 +96,7 @@ public class TransactController {
 		return ResponseEntity.ok("Balance updated successfully");		
 	}
 	@GetMapping("/{id}")
-	public List<Transact> getTransactions(@PathVariable(value = "id") long id){
+	public List<Transact> getTransactions(@PathVariable(value = "id") long id) throws NullPointerException{
 		UserLogin ul = ulservice.findUser(id);
 		long account = ul.getUs().getAnumber();
 		return tservice.showTransact(account);
