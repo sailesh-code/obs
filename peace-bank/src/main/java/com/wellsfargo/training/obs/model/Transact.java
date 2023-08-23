@@ -42,5 +42,5 @@ public class Transact {
 	
 	private String remarks;
 	
-	private long pin;
+	private String transactType;
 }

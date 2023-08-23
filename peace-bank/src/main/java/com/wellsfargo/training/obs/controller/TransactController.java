@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wellsfargo.training.obs.dto.BalanceUpdate;
+import com.wellsfargo.training.obs.dto.Transaction;
 import com.wellsfargo.training.obs.model.Transact;
 import com.wellsfargo.training.obs.model.User;
 import com.wellsfargo.training.obs.model.UserLogin;
@@ -36,7 +37,7 @@ public class TransactController {
 	}
 	
 	@PutMapping()
-	public ResponseEntity <?> createTransact(@Validated @RequestBody Transact transact){
+	public ResponseEntity <?> createTransact(@Validated @RequestBody Transaction transact){
 		
 		long amount = transact.getAmount();
 		long toaccount = transact.getToAcc();
@@ -51,6 +52,21 @@ public class TransactController {
 		if(fromUser.getAbalance() < amount) {
 			return ResponseEntity.badRequest().body("Insufficient Balance");
 		}
+		if("RTGS".equals(transact.getType())) {
+			if(transact.getAmount() < 200000 || transact.getAmount() > 1000000) {
+				return ResponseEntity.badRequest().body("Cannot initiate transaction under RTGS");
+			}
+		}
+		if("NEFT".equals(transact.getType())) {
+			if(transact.getAmount() > 1000000) {
+				return ResponseEntity.badRequest().body("Cannot initiate transaction under NEFT");
+			}
+		}
+		if("IMPS".equals(transact.getType())) {
+			if(transact.getAmount() > 200000) {
+				return ResponseEntity.badRequest().body("Cannot initiate transaction under IMPS");
+			}
+		}
 		fromUser.setAbalance(fromUser.getAbalance() - amount);
 		toUser.setAbalance(toUser.getAbalance() + amount);
 		
@@ -63,7 +79,7 @@ public class TransactController {
 		t.setNickName(transact.getNickName());
 		t.setRemarks(transact.getRemarks());
 		t.setTranDate(transact.getTranDate());
-		
+		t.setTransactType(transact.getType());
 		tservice.registerTransact(t);
 		
 		return ResponseEntity.ok("Transaction Successful");
@@ -96,7 +112,8 @@ public class TransactController {
 		return ResponseEntity.ok("Balance updated successfully");		
 	}
 	@GetMapping("/{id}")
-	public List<Transact> getTransactions(@PathVariable(value = "id") long id) throws NullPointerException{
+	public List<Transact> getTransactions(@PathVariable(value = "id") long id){
+		
 		UserLogin ul = ulservice.findUser(id);
 		long account = ul.getUs().getAnumber();
 		return tservice.showTransact(account);
