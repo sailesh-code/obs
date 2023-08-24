@@ -14,6 +14,13 @@ import jakarta.transaction.Transactional;
 public class UserService {
 	@Autowired
 	private UserRepository userrepo;
+
+	@Autowired
+	private final UserLoginRepository userLoginRepository;
+
+    	public UserService(UserLoginRepository userLoginRepository) {
+        	this.userLoginRepository = userLoginRepository;
+    	}
 	
 	public User registerUser(User u) {
 		return userrepo.save(u);
@@ -29,4 +36,12 @@ public class UserService {
 		Optional<User> u = userrepo.findByEmail(email);
 		return u.get();
 	}
+	public void updatePassword(User user, String newPassword) {
+        UserLogin userLogin = user.getUserlogin();
+
+        if (userLogin != null) {
+            userLogin.setPassword(newPassword);
+            userLoginRepository.save(userLogin);
+        }
+    }
 }
